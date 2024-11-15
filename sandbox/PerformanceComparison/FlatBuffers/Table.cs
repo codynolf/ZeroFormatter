@@ -25,14 +25,15 @@ namespace FlatBuffers
     public abstract class Table
     {
         protected int bb_pos;
-        protected ByteBuffer bb;
+        protected ByteBuffer? bb;
 
-        public ByteBuffer ByteBuffer { get { return bb; } }
+        public ByteBuffer? ByteBuffer { get { return bb; } }
 
         // Look up a field in the vtable, return an offset into the object, or 0 if the field is not
         // present.
         protected int __offset(int vtableOffset)
         {
+            if(bb == null) throw new InvalidOperationException("FlatBuffers: ByteBuffer is null");
             int vtable = bb_pos - bb.GetInt(bb_pos);
             return vtableOffset < bb.GetShort(vtable) ? (int)bb.GetShort(vtable + vtableOffset) : 0;
         }
@@ -40,12 +41,14 @@ namespace FlatBuffers
         // Retrieve the relative offset stored at "offset"
         protected int __indirect(int offset)
         {
+            if(bb == null) throw new InvalidOperationException("FlatBuffers: ByteBuffer is null");
             return offset + bb.GetInt(offset);
         }
 
         // Create a .NET String from UTF-8 data stored inside the flatbuffer.
         protected string __string(int offset)
         {
+            if(bb == null) throw new InvalidOperationException("FlatBuffers: ByteBuffer is null");
             offset += bb.GetInt(offset);
             var len = bb.GetInt(offset);
             var startPos = offset + sizeof(int);
@@ -55,6 +58,7 @@ namespace FlatBuffers
         // Get the length of a vector whose offset is stored at "offset" in this object.
         protected int __vector_len(int offset)
         {
+            if(bb == null) throw new InvalidOperationException("FlatBuffers: ByteBuffer is null");
             offset += bb_pos;
             offset += bb.GetInt(offset);
             return bb.GetInt(offset);
@@ -63,6 +67,7 @@ namespace FlatBuffers
         // Get the start of data of a vector whose offset is stored at "offset" in this object.
         protected int __vector(int offset)
         {
+            if(bb == null) throw new InvalidOperationException("FlatBuffers: ByteBuffer is null");
             offset += bb_pos;
             return offset + bb.GetInt(offset) + sizeof(int);  // data starts after the length
         }
@@ -71,6 +76,7 @@ namespace FlatBuffers
         // ArraySegment&lt;byte&gt;. If the vector is not present in the ByteBuffer,
         // then a null value will be returned.
         protected ArraySegment<byte>? __vector_as_arraysegment(int offset) {
+            if(bb == null) throw new InvalidOperationException("FlatBuffers: ByteBuffer is null");
             var o = this.__offset(offset);
             if (0 == o)
             {
@@ -85,6 +91,7 @@ namespace FlatBuffers
         // Initialize any Table-derived type to point to the union at the given offset.
         protected TTable __union<TTable>(TTable t, int offset) where TTable : Table
         {
+            if(bb == null) throw new InvalidOperationException("FlatBuffers: ByteBuffer is null");
             offset += bb_pos;
             t.bb_pos = offset + bb.GetInt(offset);
             t.bb = bb;

@@ -7,13 +7,13 @@ namespace ZeroFormatter.Formatters
 {
     // Layout: FixedSize -> [count:int][t format...] -> if count = -1 is null
     // Layout: VariableSize -> [int byteSize][count:int][elementOffset:int...][t format...] -> if byteSize = -1 is null
-    [Preserve(AllMembers = true)]
+    
     internal class ListFormatter<TTypeResolver, T> : Formatter<TTypeResolver, IList<T>>
         where TTypeResolver : ITypeResolver, new()
     {
         readonly Formatter<TTypeResolver, T> formatter;
 
-        [Preserve]
+        
         public ListFormatter()
         {
             this.formatter = Formatter<TTypeResolver, T>.Default;
@@ -147,13 +147,13 @@ namespace ZeroFormatter.Formatters
 
 #if !UNITY
 
-    [Preserve(AllMembers = true)]
+    
     internal class ReadOnlyListFormatter<TTypeResolver, T> : Formatter<TTypeResolver, IReadOnlyList<T>>
         where TTypeResolver : ITypeResolver, new()
     {
         readonly Formatter<TTypeResolver, T> formatter;
 
-        [Preserve]
+        
         public ReadOnlyListFormatter()
         {
             this.formatter = Formatter<TTypeResolver, T>.Default;

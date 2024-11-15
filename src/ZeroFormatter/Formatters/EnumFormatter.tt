@@ -32,7 +32,7 @@ namespace ZeroFormatter.Formatters
 
 <# foreach(var tuple in types) { var t = tuple.Item1; #>
 
-    [Preserve(AllMembers = true)]
+    
     internal class <#= t.Name #>EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -41,7 +41,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<<#= t.Name #>, T> deserializeCast;
         readonly Func<T, <#= t.Name #>> serializeCast;
 
-        [Preserve]
+        
         public <#= t.Name #>EnumFormatter()
         {
             Func<<#= t.Name #>, <#= t.Name #>> identity = Identity;
@@ -74,7 +74,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class Nullable<#= t.Name #>EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T?>
         where T : struct
         where TTypeResolver : ITypeResolver, new()
@@ -84,7 +84,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<<#= t.Name #>, T> deserializeCast;
         readonly Func<T, <#= t.Name #>> serializeCast;
 
-        [Preserve]
+        
         public Nullable<#= t.Name #>EnumFormatter()
         {
             Func<<#= t.Name #>, <#= t.Name #>> identity = Identity;

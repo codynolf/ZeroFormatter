@@ -7,14 +7,14 @@ namespace ZeroFormatter.Formatters
     // Layout: [hasValue:1][T1, T2...]
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class KeyTupleFormatter<TTypeResolver, T1> : Formatter<TTypeResolver, KeyTuple<T1>>
         where TTypeResolver : ITypeResolver, new()
     {
         readonly Formatter<TTypeResolver, T1> formatter1;
         
 
-        [Preserve]
+        
         public KeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -56,14 +56,14 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableKeyTupleFormatter<TTypeResolver, T1> : Formatter<TTypeResolver, KeyTuple<T1>?>
         where TTypeResolver : ITypeResolver, new()
     {
         readonly Formatter<TTypeResolver, T1> formatter1;
        
 
-        [Preserve]
+        
         public NullableKeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -119,7 +119,7 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class KeyTupleFormatter<TTypeResolver, T1, T2> : Formatter<TTypeResolver, KeyTuple<T1, T2>>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -127,7 +127,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, T2> formatter2;
         
 
-        [Preserve]
+        
         public KeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -175,7 +175,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableKeyTupleFormatter<TTypeResolver, T1, T2> : Formatter<TTypeResolver, KeyTuple<T1, T2>?>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -183,7 +183,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, T2> formatter2;
        
 
-        [Preserve]
+        
         public NullableKeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -245,7 +245,7 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class KeyTupleFormatter<TTypeResolver, T1, T2, T3> : Formatter<TTypeResolver, KeyTuple<T1, T2, T3>>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -254,7 +254,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, T3> formatter3;
         
 
-        [Preserve]
+        
         public KeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -308,7 +308,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableKeyTupleFormatter<TTypeResolver, T1, T2, T3> : Formatter<TTypeResolver, KeyTuple<T1, T2, T3>?>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -317,7 +317,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, T3> formatter3;
        
 
-        [Preserve]
+        
         public NullableKeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -385,7 +385,7 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class KeyTupleFormatter<TTypeResolver, T1, T2, T3, T4> : Formatter<TTypeResolver, KeyTuple<T1, T2, T3, T4>>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -395,7 +395,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, T4> formatter4;
         
 
-        [Preserve]
+        
         public KeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -455,7 +455,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableKeyTupleFormatter<TTypeResolver, T1, T2, T3, T4> : Formatter<TTypeResolver, KeyTuple<T1, T2, T3, T4>?>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -465,7 +465,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, T4> formatter4;
        
 
-        [Preserve]
+        
         public NullableKeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -539,7 +539,7 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class KeyTupleFormatter<TTypeResolver, T1, T2, T3, T4, T5> : Formatter<TTypeResolver, KeyTuple<T1, T2, T3, T4, T5>>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -550,7 +550,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, T5> formatter5;
         
 
-        [Preserve]
+        
         public KeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -616,7 +616,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableKeyTupleFormatter<TTypeResolver, T1, T2, T3, T4, T5> : Formatter<TTypeResolver, KeyTuple<T1, T2, T3, T4, T5>?>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -627,7 +627,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, T5> formatter5;
        
 
-        [Preserve]
+        
         public NullableKeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -707,7 +707,7 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class KeyTupleFormatter<TTypeResolver, T1, T2, T3, T4, T5, T6> : Formatter<TTypeResolver, KeyTuple<T1, T2, T3, T4, T5, T6>>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -719,7 +719,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, T6> formatter6;
         
 
-        [Preserve]
+        
         public KeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -791,7 +791,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableKeyTupleFormatter<TTypeResolver, T1, T2, T3, T4, T5, T6> : Formatter<TTypeResolver, KeyTuple<T1, T2, T3, T4, T5, T6>?>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -803,7 +803,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, T6> formatter6;
        
 
-        [Preserve]
+        
         public NullableKeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -889,7 +889,7 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class KeyTupleFormatter<TTypeResolver, T1, T2, T3, T4, T5, T6, T7> : Formatter<TTypeResolver, KeyTuple<T1, T2, T3, T4, T5, T6, T7>>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -902,7 +902,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, T7> formatter7;
         
 
-        [Preserve]
+        
         public KeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -980,7 +980,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableKeyTupleFormatter<TTypeResolver, T1, T2, T3, T4, T5, T6, T7> : Formatter<TTypeResolver, KeyTuple<T1, T2, T3, T4, T5, T6, T7>?>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -993,7 +993,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, T7> formatter7;
        
 
-        [Preserve]
+        
         public NullableKeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -1085,7 +1085,7 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class KeyTupleFormatter<TTypeResolver, T1, T2, T3, T4, T5, T6, T7, TRest> : Formatter<TTypeResolver, KeyTuple<T1, T2, T3, T4, T5, T6, T7, TRest>>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -1099,7 +1099,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, TRest> formatter8;
         
 
-        [Preserve]
+        
         public KeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;
@@ -1183,7 +1183,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableKeyTupleFormatter<TTypeResolver, T1, T2, T3, T4, T5, T6, T7, TRest> : Formatter<TTypeResolver, KeyTuple<T1, T2, T3, T4, T5, T6, T7, TRest>?>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -1197,7 +1197,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, TRest> formatter8;
        
 
-        [Preserve]
+        
         public NullableKeyTupleFormatter()
         {
             this.formatter1 = Formatter<TTypeResolver, T1>.Default;

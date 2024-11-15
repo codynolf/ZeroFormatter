@@ -8,7 +8,7 @@ namespace ZeroFormatter
     {
         public static readonly DirtyTracker NullTracker = new NullDirtyTracker();
 
-        readonly DirtyTracker parent;
+        readonly DirtyTracker? parent;
 
         public virtual bool IsDirty { get; private set; }
 

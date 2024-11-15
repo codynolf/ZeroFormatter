@@ -29,24 +29,12 @@ namespace ZeroFormatter
             return new DelegateDictionary<TKey, TValue>(dict);
         }
 
-#if !UNITY
-
-        public static ILazyReadOnlyDictionary<TKey, TValue> AsLazyReadOnlyDictionary<TKey, TValue>(this IDictionary<TKey, TValue> dict)
-        {
-            return new DelegateDictionary<TKey, TValue>(dict);
-        }
-
-#endif
-
         public static ILazyLookup<TKey, TElement> AsLazyLookup<TKey, TElement>(this ILookup<TKey, TElement> lookup)
         {
             return new DelegateLookup<TKey, TElement>(lookup);
         }
 
         internal class DelegateDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ILazyDictionary<TKey, TValue>
-#if !UNITY
-            , ILazyReadOnlyDictionary<TKey, TValue>
-#endif
         {
             readonly IDictionary<TKey, TValue> dictionary;
 
@@ -100,26 +88,6 @@ namespace ZeroFormatter
                 }
             }
 
-#if !UNITY
-
-            IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
-            {
-                get
-                {
-                    return dictionary.Keys;
-                }
-            }
-
-            IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values
-            {
-                get
-                {
-                    return dictionary.Values;
-                }
-            }
-
-#endif
-
             public void Add(KeyValuePair<TKey, TValue> item)
             {
                 dictionary.Add(item);
@@ -165,7 +133,7 @@ namespace ZeroFormatter
                 return dictionary.Remove(key);
             }
 
-            public bool TryGetValue(TKey key, out TValue value)
+            public bool? TryGetValue(TKey key, out TValue? value)
             {
                 return dictionary.TryGetValue(key, out value);
             }
@@ -173,6 +141,11 @@ namespace ZeroFormatter
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return dictionary.GetEnumerator();
+            }
+
+            bool IDictionary<TKey, TValue>.TryGetValue(TKey key, out TValue value)
+            {
+                throw new NotImplementedException();
             }
         }
 

@@ -130,7 +130,7 @@ namespace ZeroFormatter.Formatters
             Default = (Formatter<TTypeResolver, T>)formatter;
         }
 
-        [Preserve]
+        
         public Formatter()
         {
         }

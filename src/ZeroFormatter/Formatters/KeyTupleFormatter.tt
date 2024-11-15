@@ -20,7 +20,7 @@ namespace ZeroFormatter.Formatters
     var t = "KeyTuple<" + ts + ">"; 
 #>
 
-    [Preserve(AllMembers = true)]
+    
     internal class KeyTupleFormatter<TTypeResolver, <#= ts #>> : Formatter<TTypeResolver, <#= t #>>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -28,7 +28,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, <#= toT(j) #>> formatter<#= j #>;
 <# } #>        
 
-        [Preserve]
+        
         public KeyTupleFormatter()
         {
 <# for(var j = 1; j <= i; j++) { #>
@@ -77,7 +77,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableKeyTupleFormatter<TTypeResolver, <#= ts #>> : Formatter<TTypeResolver, <#= t #>?>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -85,7 +85,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, <#= toT(j) #>> formatter<#= j #>;
 <# } #>       
 
-        [Preserve]
+        
         public NullableKeyTupleFormatter()
         {
 <# for(var j = 1; j <= i; j++) { #>

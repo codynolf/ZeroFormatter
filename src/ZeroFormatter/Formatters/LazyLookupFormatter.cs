@@ -6,11 +6,11 @@ using ZeroFormatter.Segments;
 
 namespace ZeroFormatter.Formatters
 {
-    [Preserve(AllMembers = true)]
+    
     internal class LazyLookupFormatter<TTypeResolver, TKey, TValue> : Formatter<TTypeResolver, ILazyLookup<TKey, TValue>>
         where TTypeResolver : ITypeResolver, new()
     {
-        [Preserve]
+        
         public LazyLookupFormatter()
         {
 
@@ -44,11 +44,11 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class GroupingSegmentFormatter<TTypeResolver, TKey, TValue> : Formatter<TTypeResolver, GroupingSegment<TTypeResolver, TKey, TValue>>
         where TTypeResolver : ITypeResolver, new()
     {
-        [Preserve]
+        
         public GroupingSegmentFormatter()
         {
 

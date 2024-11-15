@@ -45,8 +45,8 @@ namespace ZeroFormatter.Comparers
 
         public static class DelegateCache<T>
         {
-            public static readonly Func<T, int> GetHashCodeDelegate;
-            public static readonly Func<T, T, bool> EqualsDelegate;
+            public static readonly Func<T, int>? GetHashCodeDelegate;
+            public static readonly Func<T?, T?, bool>? EqualsDelegate;
 
             static DelegateCache()
             {
@@ -61,7 +61,7 @@ namespace ZeroFormatter.Comparers
                             Func<sbyte, int> getHash = SByteGetHashCode;
                             Func<sbyte, sbyte, bool> eq = SByteEquals;
                             GetHashCodeDelegate = getHash.GetMethodInfo().CreateDelegate(typeof(Func<T, int>)) as Func<T, int>;
-                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T, T, bool>)) as Func<T, T, bool>;
+                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T?, T?, bool>)) as Func<T?, T?, bool>;
                         }
                         break;
                     case TypeCode.Byte:
@@ -69,7 +69,7 @@ namespace ZeroFormatter.Comparers
                             Func<Byte, int> getHash = ByteGetHashCode;
                             Func<Byte, Byte, bool> eq = ByteEquals;
                             GetHashCodeDelegate = getHash.GetMethodInfo().CreateDelegate(typeof(Func<T, int>)) as Func<T, int>;
-                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T, T, bool>)) as Func<T, T, bool>;
+                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T?, T?, bool>)) as Func<T?, T?, bool>;
                         }
                         break;
                     case TypeCode.Int16:
@@ -77,7 +77,7 @@ namespace ZeroFormatter.Comparers
                             Func<Int16, int> getHash = ShortGetHashCode;
                             Func<Int16, Int16, bool> eq = ShortEquals;
                             GetHashCodeDelegate = getHash.GetMethodInfo().CreateDelegate(typeof(Func<T, int>)) as Func<T, int>;
-                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T, T, bool>)) as Func<T, T, bool>;
+                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T?, T?, bool>)) as Func<T?, T?, bool>;
                         }
                         break;
                     case TypeCode.UInt16:
@@ -85,7 +85,7 @@ namespace ZeroFormatter.Comparers
                             Func<UInt16, int> getHash = UShortGetHashCode;
                             Func<UInt16, UInt16, bool> eq = UShortEquals;
                             GetHashCodeDelegate = getHash.GetMethodInfo().CreateDelegate(typeof(Func<T, int>)) as Func<T, int>;
-                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T, T, bool>)) as Func<T, T, bool>;
+                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T?, T?, bool>)) as Func<T?, T?, bool>;
                         }
                         break;
                     case TypeCode.Int32:
@@ -93,7 +93,7 @@ namespace ZeroFormatter.Comparers
                             Func<int, int> getHash = IntGetHashCode;
                             Func<int, int, bool> eq = IntEquals;
                             GetHashCodeDelegate = getHash.GetMethodInfo().CreateDelegate(typeof(Func<T, int>)) as Func<T, int>;
-                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T, T, bool>)) as Func<T, T, bool>;
+                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T?, T?, bool>)) as Func<T?, T?, bool>;
                         }
                         break;
                     case TypeCode.UInt32:
@@ -101,7 +101,7 @@ namespace ZeroFormatter.Comparers
                             Func<UInt32, int> getHash = UIntGetHashCode;
                             Func<UInt32, UInt32, bool> eq = UIntEquals;
                             GetHashCodeDelegate = getHash.GetMethodInfo().CreateDelegate(typeof(Func<T, int>)) as Func<T, int>;
-                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T, T, bool>)) as Func<T, T, bool>;
+                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T?, T?, bool>)) as Func<T?, T?, bool>;
                         }
                         break;
                     case TypeCode.Int64:
@@ -109,7 +109,7 @@ namespace ZeroFormatter.Comparers
                             Func<Int64, int> getHash = LongGetHashCode;
                             Func<Int64, Int64, bool> eq = LongEquals;
                             GetHashCodeDelegate = getHash.GetMethodInfo().CreateDelegate(typeof(Func<T, int>)) as Func<T, int>;
-                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T, T, bool>)) as Func<T, T, bool>;
+                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T?, T?, bool>)) as Func<T?, T?, bool>;
                         }
                         break;
                     case TypeCode.UInt64:
@@ -117,7 +117,7 @@ namespace ZeroFormatter.Comparers
                             Func<UInt64, int> getHash = ULongGetHashCode;
                             Func<UInt64, UInt64, bool> eq = ULongEquals;
                             GetHashCodeDelegate = getHash.GetMethodInfo().CreateDelegate(typeof(Func<T, int>)) as Func<T, int>;
-                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T, T, bool>)) as Func<T, T, bool>;
+                            EqualsDelegate = eq.GetMethodInfo().CreateDelegate(typeof(Func<T?, T?, bool>)) as Func<T?, T?, bool>;
                         }
                         break;
                     default:
@@ -131,8 +131,8 @@ namespace ZeroFormatter.Comparers
     {
         public static IEqualityComparer<T> Default = new EnumEqualityComparer<T>();
 
-        readonly Func<T, int> getHashCode;
-        readonly Func<T, T, bool> equals;
+        readonly Func<T, int>? getHashCode;
+        readonly Func<T?, T?, bool>? equals;
 
         EnumEqualityComparer()
         {
@@ -140,14 +140,14 @@ namespace ZeroFormatter.Comparers
             equals = EnumEqualityComparerHelper.DelegateCache<T>.EqualsDelegate;
         }
 
-        public bool Equals(T x, T y)
+        public bool Equals(T? x, T? y)
         {
-            return equals(x, y);
+            return equals == null ? false : equals(x, y);
         }
 
         public int GetHashCode(T obj)
         {
-            return getHashCode(obj);
+            return getHashCode == null ? int.MinValue : getHashCode(obj);
         }
     }
 }

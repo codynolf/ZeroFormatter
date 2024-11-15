@@ -222,7 +222,7 @@ namespace ZeroFormatter.Segments
     {
         readonly int elementSize;
 
-        internal static FixedListSegment<TTypeResolver, T> Create(DirtyTracker tracker, byte[] bytes, int offset, out int byteSize)
+        public static FixedListSegment<TTypeResolver, T> Create(DirtyTracker tracker, byte[] bytes, int offset, out int byteSize)
         {
             var formatter = Formatters.Formatter<TTypeResolver, T>.Default;
             var formatterLength = formatter.GetLength();
@@ -340,7 +340,7 @@ namespace ZeroFormatter.Segments
     public class VariableListSegment<TTypeResolver, T> : ListSegment<TTypeResolver, T>, IZeroFormatterSegment
         where TTypeResolver : ITypeResolver, new()
     {
-        internal static VariableListSegment<TTypeResolver, T> Create(DirtyTracker tracker, byte[] bytes, int offset, out int byteSize)
+        public static VariableListSegment<TTypeResolver, T> Create(DirtyTracker tracker, byte[] bytes, int offset, out int byteSize)
         {
             byteSize = BinaryUtil.ReadInt32(ref bytes, offset);
             if (byteSize == -1)

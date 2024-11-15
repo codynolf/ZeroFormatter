@@ -27,7 +27,7 @@ namespace ZeroFormatter
     public class UnionAttribute : Attribute
     {
         public Type[] SubTypes { get; private set; }
-        public Type FallbackType { get; private set; }
+        public Type? FallbackType { get; private set; }
 
         public UnionAttribute(params Type[] subTypes)
         {

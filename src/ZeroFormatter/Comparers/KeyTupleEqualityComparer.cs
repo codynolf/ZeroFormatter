@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using ZeroFormatter.Comparers;
+﻿using ZeroFormatter;
 
 namespace ZeroFormatter.Comparers
 {
-    [Preserve(AllMembers = true)]
     public class KeyTupleEqualityComparer<T1> : IEqualityComparer<KeyTuple<T1>>
     {
-        [Preserve]
         public KeyTupleEqualityComparer()
         {
 
@@ -21,16 +16,18 @@ namespace ZeroFormatter.Comparers
 
         public int GetHashCode(KeyTuple<T1> obj)
         {
+            if(obj.Item1 == null)
+                throw new System.ArgumentNullException("Item1");
             return ZeroFormatterEqualityComparer<T1>.Default.GetHashCode(obj.Item1);
         }
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     public class KeyTupleEqualityComparer<T1, T2> : IEqualityComparer<KeyTuple<T1, T2>>
     {
 
-        [Preserve]
+        
         public KeyTupleEqualityComparer()
         {
 
@@ -47,6 +44,11 @@ namespace ZeroFormatter.Comparers
 
         public int GetHashCode(KeyTuple<T1, T2> obj)
         {
+            if(obj.Item1 == null)
+                throw new System.ArgumentNullException("Item1");
+            if(obj.Item2 == null)
+                throw new System.ArgumentNullException("Item2");
+
             var comparer1 = ZeroFormatterEqualityComparer<T1>.Default;
             var comparer2 = ZeroFormatterEqualityComparer<T2>.Default;
 
@@ -58,11 +60,11 @@ namespace ZeroFormatter.Comparers
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     public class KeyTupleEqualityComparer<T1, T2, T3> : IEqualityComparer<KeyTuple<T1, T2, T3>>
     {
 
-        [Preserve]
+        
         public KeyTupleEqualityComparer()
         {
 
@@ -82,6 +84,12 @@ namespace ZeroFormatter.Comparers
 
         public int GetHashCode(KeyTuple<T1, T2, T3> obj)
         {
+            if(obj.Item1 == null)
+                throw new System.ArgumentNullException("Item1");
+            if(obj.Item2 == null)
+                throw new System.ArgumentNullException("Item2");
+            if(obj.Item3 == null)
+                throw new System.ArgumentNullException("Item3");
 
             var comparer1 = ZeroFormatterEqualityComparer<T1>.Default;
             var comparer2 = ZeroFormatterEqualityComparer<T2>.Default;
@@ -96,11 +104,11 @@ namespace ZeroFormatter.Comparers
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     public class KeyTupleEqualityComparer<T1, T2, T3, T4> : IEqualityComparer<KeyTuple<T1, T2, T3, T4>>
     {
 
-        [Preserve]
+        
         public KeyTupleEqualityComparer()
         {
 
@@ -122,6 +130,14 @@ namespace ZeroFormatter.Comparers
 
         public int GetHashCode(KeyTuple<T1, T2, T3, T4> obj)
         {
+            if(obj.Item1 == null)
+                throw new System.ArgumentNullException("Item1");
+            if(obj.Item2 == null)
+                throw new System.ArgumentNullException("Item2");
+            if(obj.Item3 == null)
+                throw new System.ArgumentNullException("Item3");
+            if(obj.Item4 == null)
+                throw new System.ArgumentNullException("Item4");
 
             var comparer1 = ZeroFormatterEqualityComparer<T1>.Default;
             var comparer2 = ZeroFormatterEqualityComparer<T2>.Default;
@@ -139,12 +155,12 @@ namespace ZeroFormatter.Comparers
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     public class KeyTupleEqualityComparer<T1, T2, T3, T4, T5> : IEqualityComparer<KeyTuple<T1, T2, T3, T4, T5>>
     {
 
 
-        [Preserve]
+        
         public KeyTupleEqualityComparer()
         {
 
@@ -168,6 +184,16 @@ namespace ZeroFormatter.Comparers
 
         public int GetHashCode(KeyTuple<T1, T2, T3, T4, T5> obj)
         {
+            if(obj.Item1 == null)
+                throw new System.ArgumentNullException("Item1");
+            if(obj.Item2 == null)
+                throw new System.ArgumentNullException("Item2");
+            if(obj.Item3 == null)
+                throw new System.ArgumentNullException("Item3");
+            if(obj.Item4 == null)
+                throw new System.ArgumentNullException("Item4");
+            if(obj.Item5 == null)
+                throw new System.ArgumentNullException("Item5");
 
             var comparer1 = ZeroFormatterEqualityComparer<T1>.Default;
             var comparer2 = ZeroFormatterEqualityComparer<T2>.Default;
@@ -187,10 +213,10 @@ namespace ZeroFormatter.Comparers
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     public class KeyTupleEqualityComparer<T1, T2, T3, T4, T5, T6> : IEqualityComparer<KeyTuple<T1, T2, T3, T4, T5, T6>>
     {
-        [Preserve]
+        
         public KeyTupleEqualityComparer()
         {
 
@@ -216,6 +242,18 @@ namespace ZeroFormatter.Comparers
 
         public int GetHashCode(KeyTuple<T1, T2, T3, T4, T5, T6> obj)
         {
+            if(obj.Item1 == null)
+                throw new System.ArgumentNullException("Item1");
+            if(obj.Item2 == null)
+                throw new System.ArgumentNullException("Item2");
+            if(obj.Item3 == null)
+                throw new System.ArgumentNullException("Item3");
+            if(obj.Item4 == null)
+                throw new System.ArgumentNullException("Item4");
+            if(obj.Item5 == null)
+                throw new System.ArgumentNullException("Item5");
+            if(obj.Item6 == null)
+                throw new System.ArgumentNullException("Item6");
 
             var comparer1 = ZeroFormatterEqualityComparer<T1>.Default;
             var comparer2 = ZeroFormatterEqualityComparer<T2>.Default;
@@ -238,11 +276,11 @@ namespace ZeroFormatter.Comparers
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     public class KeyTupleEqualityComparer<T1, T2, T3, T4, T5, T6, T7> : IEqualityComparer<KeyTuple<T1, T2, T3, T4, T5, T6, T7>>
     {
 
-        [Preserve]
+        
         public KeyTupleEqualityComparer()
         {
 
@@ -271,6 +309,20 @@ namespace ZeroFormatter.Comparers
 
         public int GetHashCode(KeyTuple<T1, T2, T3, T4, T5, T6, T7> obj)
         {
+            if(obj.Item1 == null)
+                throw new System.ArgumentNullException("Item1");
+            if(obj.Item2 == null)
+                throw new System.ArgumentNullException("Item2");
+            if(obj.Item3 == null)
+                throw new System.ArgumentNullException("Item3");
+            if(obj.Item4 == null)
+                throw new System.ArgumentNullException("Item4");
+            if(obj.Item5 == null)
+                throw new System.ArgumentNullException("Item5");
+            if(obj.Item6 == null)
+                throw new System.ArgumentNullException("Item6");
+            if(obj.Item7 == null)
+                throw new System.ArgumentNullException("Item7");
 
             var comparer1 = ZeroFormatterEqualityComparer<T1>.Default;
             var comparer2 = ZeroFormatterEqualityComparer<T2>.Default;
@@ -295,10 +347,10 @@ namespace ZeroFormatter.Comparers
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     public class KeyTupleEqualityComparer<T1, T2, T3, T4, T5, T6, T7, TRest> : IEqualityComparer<KeyTuple<T1, T2, T3, T4, T5, T6, T7, TRest>>
     {
-        [Preserve]
+        
         public KeyTupleEqualityComparer()
         {
 
@@ -328,6 +380,23 @@ namespace ZeroFormatter.Comparers
 
         public int GetHashCode(KeyTuple<T1, T2, T3, T4, T5, T6, T7, TRest> obj)
         {
+            if(obj.Item1 == null)
+                throw new System.ArgumentNullException("Item1");
+            if(obj.Item2 == null)
+                throw new System.ArgumentNullException("Item2");
+            if(obj.Item3 == null)
+                throw new System.ArgumentNullException("Item3");
+            if(obj.Item4 == null)
+                throw new System.ArgumentNullException("Item4");
+            if(obj.Item5 == null)
+                throw new System.ArgumentNullException("Item5");
+            if(obj.Item6 == null)
+                throw new System.ArgumentNullException("Item6");
+            if(obj.Item7 == null)
+                throw new System.ArgumentNullException("Item7");
+            if(obj.Rest == null)
+                throw new System.ArgumentNullException("Rest");
+                
             var comparer1 = ZeroFormatterEqualityComparer<T1>.Default;
             var comparer2 = ZeroFormatterEqualityComparer<T2>.Default;
             var comparer3 = ZeroFormatterEqualityComparer<T3>.Default;

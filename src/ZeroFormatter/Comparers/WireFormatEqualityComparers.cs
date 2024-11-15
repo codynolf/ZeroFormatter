@@ -296,7 +296,7 @@ namespace ZeroFormatter.Comparers
 
     internal class StringEqualityComparer : IEqualityComparer<string>
     {
-        public bool Equals(string x, string y)
+        public bool Equals(string? x, string? y)
         {
             return x == y;
         }

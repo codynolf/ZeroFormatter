@@ -5,11 +5,6 @@ using ZeroFormatter.Internal;
 
 namespace ZeroFormatter.Formatters
 {
-    // Layout: [fixedElementSize]
-    // Layout: [hasValue:1][fixedElementSize]
-
-
-    [Preserve(AllMembers = true)]
     internal class Int16EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -18,7 +13,6 @@ namespace ZeroFormatter.Formatters
         readonly Func<Int16, T> deserializeCast;
         readonly Func<T, Int16> serializeCast;
 
-        [Preserve]
         public Int16EnumFormatter()
         {
             Func<Int16, Int16> identity = Identity;
@@ -51,7 +45,6 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
     internal class NullableInt16EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T?>
         where T : struct
         where TTypeResolver : ITypeResolver, new()
@@ -61,7 +54,6 @@ namespace ZeroFormatter.Formatters
         readonly Func<Int16, T> deserializeCast;
         readonly Func<T, Int16> serializeCast;
 
-        [Preserve]
         public NullableInt16EnumFormatter()
         {
             Func<Int16, Int16> identity = Identity;
@@ -108,8 +100,6 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-
-    [Preserve(AllMembers = true)]
     internal class Int32EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -118,7 +108,6 @@ namespace ZeroFormatter.Formatters
         readonly Func<Int32, T> deserializeCast;
         readonly Func<T, Int32> serializeCast;
 
-        [Preserve]
         public Int32EnumFormatter()
         {
             Func<Int32, Int32> identity = Identity;
@@ -151,7 +140,6 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
     internal class NullableInt32EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T?>
         where T : struct
         where TTypeResolver : ITypeResolver, new()
@@ -161,7 +149,6 @@ namespace ZeroFormatter.Formatters
         readonly Func<Int32, T> deserializeCast;
         readonly Func<T, Int32> serializeCast;
 
-        [Preserve]
         public NullableInt32EnumFormatter()
         {
             Func<Int32, Int32> identity = Identity;
@@ -209,7 +196,6 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
     internal class Int64EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -218,7 +204,6 @@ namespace ZeroFormatter.Formatters
         readonly Func<Int64, T> deserializeCast;
         readonly Func<T, Int64> serializeCast;
 
-        [Preserve]
         public Int64EnumFormatter()
         {
             Func<Int64, Int64> identity = Identity;
@@ -251,7 +236,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableInt64EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T?>
         where T : struct
         where TTypeResolver : ITypeResolver, new()
@@ -261,7 +246,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<Int64, T> deserializeCast;
         readonly Func<T, Int64> serializeCast;
 
-        [Preserve]
+        
         public NullableInt64EnumFormatter()
         {
             Func<Int64, Int64> identity = Identity;
@@ -309,7 +294,7 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class UInt16EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -318,7 +303,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<UInt16, T> deserializeCast;
         readonly Func<T, UInt16> serializeCast;
 
-        [Preserve]
+        
         public UInt16EnumFormatter()
         {
             Func<UInt16, UInt16> identity = Identity;
@@ -351,7 +336,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableUInt16EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T?>
         where T : struct
         where TTypeResolver : ITypeResolver, new()
@@ -361,7 +346,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<UInt16, T> deserializeCast;
         readonly Func<T, UInt16> serializeCast;
 
-        [Preserve]
+        
         public NullableUInt16EnumFormatter()
         {
             Func<UInt16, UInt16> identity = Identity;
@@ -409,7 +394,7 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class UInt32EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -418,7 +403,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<UInt32, T> deserializeCast;
         readonly Func<T, UInt32> serializeCast;
 
-        [Preserve]
+        
         public UInt32EnumFormatter()
         {
             Func<UInt32, UInt32> identity = Identity;
@@ -451,7 +436,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableUInt32EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T?>
         where T : struct
         where TTypeResolver : ITypeResolver, new()
@@ -461,7 +446,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<UInt32, T> deserializeCast;
         readonly Func<T, UInt32> serializeCast;
 
-        [Preserve]
+        
         public NullableUInt32EnumFormatter()
         {
             Func<UInt32, UInt32> identity = Identity;
@@ -509,7 +494,7 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class UInt64EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -518,7 +503,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<UInt64, T> deserializeCast;
         readonly Func<T, UInt64> serializeCast;
 
-        [Preserve]
+        
         public UInt64EnumFormatter()
         {
             Func<UInt64, UInt64> identity = Identity;
@@ -551,7 +536,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableUInt64EnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T?>
         where T : struct
         where TTypeResolver : ITypeResolver, new()
@@ -561,7 +546,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<UInt64, T> deserializeCast;
         readonly Func<T, UInt64> serializeCast;
 
-        [Preserve]
+        
         public NullableUInt64EnumFormatter()
         {
             Func<UInt64, UInt64> identity = Identity;
@@ -609,7 +594,7 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class ByteEnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -618,7 +603,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<Byte, T> deserializeCast;
         readonly Func<T, Byte> serializeCast;
 
-        [Preserve]
+        
         public ByteEnumFormatter()
         {
             Func<Byte, Byte> identity = Identity;
@@ -651,7 +636,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableByteEnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T?>
         where T : struct
         where TTypeResolver : ITypeResolver, new()
@@ -661,7 +646,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<Byte, T> deserializeCast;
         readonly Func<T, Byte> serializeCast;
 
-        [Preserve]
+        
         public NullableByteEnumFormatter()
         {
             Func<Byte, Byte> identity = Identity;
@@ -709,7 +694,7 @@ namespace ZeroFormatter.Formatters
     }
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class SByteEnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -718,7 +703,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<SByte, T> deserializeCast;
         readonly Func<T, SByte> serializeCast;
 
-        [Preserve]
+        
         public SByteEnumFormatter()
         {
             Func<SByte, SByte> identity = Identity;
@@ -751,7 +736,7 @@ namespace ZeroFormatter.Formatters
         }
     }
 
-    [Preserve(AllMembers = true)]
+    
     internal class NullableSByteEnumFormatter<TTypeResolver, T> : Formatter<TTypeResolver, T?>
         where T : struct
         where TTypeResolver : ITypeResolver, new()
@@ -761,7 +746,7 @@ namespace ZeroFormatter.Formatters
         readonly Func<SByte, T> deserializeCast;
         readonly Func<T, SByte> serializeCast;
 
-        [Preserve]
+        
         public NullableSByteEnumFormatter()
         {
             Func<SByte, SByte> identity = Identity;

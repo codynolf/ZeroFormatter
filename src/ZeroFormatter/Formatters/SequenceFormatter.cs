@@ -166,7 +166,7 @@ namespace ZeroFormatter.Formatters
             return offset - startOffset;
         }
 
-        public override TCollection Deserialize(ref byte[] bytes, int offset, DirtyTracker tracker, out int byteSize)
+        public override TCollection? Deserialize(ref byte[] bytes, int offset, DirtyTracker tracker, out int byteSize)
         {
             tracker.Dirty(); // can not track so mark as dirty.
 
@@ -174,7 +174,7 @@ namespace ZeroFormatter.Formatters
             if (length == -1)
             {
                 byteSize = 4;
-                return default(TCollection);
+                return default;
             }
 
             var startOffset = offset;

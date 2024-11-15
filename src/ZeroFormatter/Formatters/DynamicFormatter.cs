@@ -17,13 +17,13 @@ namespace ZeroFormatter.Formatters
 
     internal class EmittableMemberInfo
     {
-        readonly PropertyInfo propertyInfo;
-        readonly FieldInfo fieldInfo;
+        readonly PropertyInfo? propertyInfo;
+        readonly FieldInfo? fieldInfo;
 
         public bool IsProperty { get { return propertyInfo != null; } }
         public bool IsField { get { return fieldInfo != null; } }
 
-        public PropertyInfo PropertyInfoUnsafe
+        public PropertyInfo? PropertyInfoUnsafe
         {
             get
             {
@@ -32,19 +32,19 @@ namespace ZeroFormatter.Formatters
             }
         }
 
-        public string Name
+        public string? Name
         {
             get
             {
-                return (IsProperty) ? propertyInfo.Name : fieldInfo.Name;
+                return (IsProperty) ? propertyInfo?.Name : fieldInfo?.Name;
             }
         }
 
-        public Type MemberType
+        public Type? MemberType
         {
             get
             {
-                return (IsProperty) ? propertyInfo.PropertyType : fieldInfo.FieldType;
+                return (IsProperty) ? propertyInfo?.PropertyType : fieldInfo?.FieldType;
             }
         }
 
@@ -60,9 +60,15 @@ namespace ZeroFormatter.Formatters
 
         public void EmitLoadValue(ILGenerator il)
         {
+            if(fieldInfo == null)
+                throw new InvalidOperationException("FieldInfo is null.");
+
+            MethodInfo? propMethodInfo = propertyInfo?.GetGetMethod();
+            if(propMethodInfo == null)
+                throw new InvalidOperationException("PropertyInfo is null.");
             if (IsProperty)
             {
-                il.Emit(OpCodes.Callvirt, propertyInfo.GetGetMethod());
+                il.Emit(OpCodes.Callvirt, propMethodInfo);
             }
             else
             {
@@ -119,7 +125,7 @@ namespace ZeroFormatter.Formatters
                     }
                     propInfo = null;
 
-                    var baseType = item.DeclaringType.GetTypeInfo().BaseType;
+                    var baseType = item.DeclaringType?.GetTypeInfo().BaseType;
                     if (baseType != null)
                     {
                         var basePropInfo = baseType.GetTypeInfo().GetProperty(item.Name);
@@ -149,10 +155,7 @@ namespace ZeroFormatter.Formatters
                     {
                         throw new InvalidOperationException("Public property must needs both public/protected get and set accessor." + type.Name + "." + item.Name);
                     }
-                }
-
-                if (isClass)
-                {
+                    
                     if (!getMethod.IsVirtual || !setMethod.IsVirtual)
                     {
                         throw new InvalidOperationException("Public property's accessor must be virtual. " + type.Name + "." + item.Name);
@@ -198,7 +201,15 @@ namespace ZeroFormatter.Formatters
 
         static void VerifyMember(Type resolverType, EmittableMemberInfo info)
         {
-            var formatter = typeof(Formatter<,>).MakeGenericType(resolverType, info.MemberType).GetTypeInfo().GetProperty("Default").GetValue(null, null);
+            object? formatter = null;
+            Type? memeberType = info.MemberType;
+            if(memeberType == null) {
+                formatter = typeof(Formatter<,>).MakeGenericType(resolverType).GetTypeInfo().GetProperty("Default")?.GetValue(null, null);
+            }
+            else {
+                formatter = typeof(Formatter<,>).MakeGenericType(resolverType, memeberType).GetTypeInfo().GetProperty("Default")?.GetValue(null, null);
+            }
+
             var error = formatter as IErrorFormatter;
             if (error != null)
             {
@@ -211,7 +222,7 @@ namespace ZeroFormatter.Formatters
 
     internal static class DynamicFormatter
     {
-        public static object Create<TTypeResolver, T>()
+        public static object? Create<TTypeResolver, T>()
             where TTypeResolver : ITypeResolver, new()
         {
             var resolverType = typeof(TTypeResolver);
@@ -229,7 +240,7 @@ namespace ZeroFormatter.Formatters
         static TypeInfo BuildFormatter(ModuleBuilder builder, Type resolverType, Type elementType, Tuple<int, EmittableMemberInfo>[] memberInfos)
         {
             var typeBuilder = builder.DefineType(
-               DynamicAssemblyHolder.ModuleName + "." + resolverType.FullName.Replace(".", "_") + "." + elementType.FullName + "$Formatter",
+               DynamicAssemblyHolder.ModuleName + "." + resolverType.FullName?.Replace(".", "_") + "." + elementType.FullName + "$Formatter",
                TypeAttributes.Public,
                typeof(Formatter<,>).MakeGenericType(resolverType, elementType));
 
@@ -237,7 +248,15 @@ namespace ZeroFormatter.Formatters
             var formattersInField = new List<Tuple<int, EmittableMemberInfo, FieldBuilder>>();
             foreach (var item in memberInfos)
             {
-                var field = typeBuilder.DefineField("<>" + item.Item2.Name + "Formatter", typeof(Formatter<,>).MakeGenericType(resolverType, item.Item2.MemberType), FieldAttributes.Private | FieldAttributes.InitOnly);
+                FieldBuilder? field = null;
+                Type? memberType = item.Item2.MemberType;
+                if(memberType == null) {
+                    field = typeBuilder.DefineField("<>" + item.Item2.Name + "Formatter", typeof(Formatter<,>).MakeGenericType(resolverType), FieldAttributes.Private | FieldAttributes.InitOnly);
+                }
+                else{
+                    field = typeBuilder.DefineField("<>" + item.Item2.Name + "Formatter", typeof(Formatter<,>).MakeGenericType(resolverType, memberType), FieldAttributes.Private | FieldAttributes.InitOnly);
+                }                   
+
                 formattersInField.Add(Tuple.Create(item.Item1, item.Item2, field));
             }
 
@@ -248,13 +267,20 @@ namespace ZeroFormatter.Formatters
                 var il = method.GetILGenerator();
 
                 il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Call, typeof(Formatter<,>).MakeGenericType(resolverType, elementType).GetTypeInfo().GetConstructor(Type.EmptyTypes));
+
+                ConstructorInfo? constructorInfo = typeof(Formatter<,>).MakeGenericType(resolverType, elementType).GetTypeInfo().GetConstructor(Type.EmptyTypes);
+                if(constructorInfo != null) {
+                    il.Emit(OpCodes.Call, constructorInfo);
+                }
 
                 foreach (var item in formattersInField)
                 {
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Call, item.Item3.FieldType.GetTypeInfo().GetProperty("Default").GetGetMethod());
-                    il.Emit(OpCodes.Stfld, item.Item3);
+                    MethodInfo? getMethod = item.Item3.FieldType.GetTypeInfo().GetProperty("Default")?.GetGetMethod();
+                    if(getMethod != null) {
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Call, getMethod);
+                        il.Emit(OpCodes.Stfld, item.Item3);
+                    }
                 }
                 il.Emit(OpCodes.Ret);
             }
@@ -293,14 +319,19 @@ namespace ZeroFormatter.Formatters
                 il.Emit(OpCodes.Ldloc_0);
                 il.Emit(OpCodes.Brfalse, labelA);
 
+                MethodInfo? serializeMethodInfo =  typeof(IZeroFormatterSegment).GetTypeInfo().GetMethod("Serialize");
+                if(serializeMethodInfo != null)
                 // if(segment != null)
                 {
                     il.Emit(OpCodes.Ldloc_0);
                     il.Emit(OpCodes.Ldarg_1);
                     il.Emit(OpCodes.Ldarg_2);
-                    il.Emit(OpCodes.Call, typeof(IZeroFormatterSegment).GetTypeInfo().GetMethod("Serialize"));
+                    il.Emit(OpCodes.Call, serializeMethodInfo);
                     il.Emit(OpCodes.Ret);
                 }
+
+                MethodInfo? writeInt32MethodInfo =  typeof(BinaryUtil).GetTypeInfo().GetMethod("WriteInt32");
+                if(writeInt32MethodInfo != null)
                 // else if(value == null)
                 {
                     il.MarkLabel(labelA);
@@ -310,7 +341,7 @@ namespace ZeroFormatter.Formatters
                     il.Emit(OpCodes.Ldarg_1);
                     il.Emit(OpCodes.Ldarg_2);
                     il.Emit(OpCodes.Ldc_I4_M1);
-                    il.Emit(OpCodes.Call, typeof(BinaryUtil).GetTypeInfo().GetMethod("WriteInt32"));
+                    il.Emit(OpCodes.Call, writeInt32MethodInfo);
                     il.Emit(OpCodes.Pop);
                     il.Emit(OpCodes.Ldc_I4_4);
                     il.Emit(OpCodes.Ret);
@@ -341,12 +372,20 @@ namespace ZeroFormatter.Formatters
                         il.Emit(OpCodes.Sub);
                         if (i == 0)
                         {
-                            il.Emit(OpCodes.Call, typeof(BinaryUtil).GetTypeInfo().GetMethod("WriteInt32"));
-                            il.Emit(OpCodes.Pop);
+                            MethodInfo? writeInt32MethodInfo2 = typeof(BinaryUtil).GetTypeInfo().GetMethod("WriteInt32");
+                            if(writeInt32MethodInfo2 != null)
+                            {
+                                il.Emit(OpCodes.Call, writeInt32MethodInfo2);
+                                il.Emit(OpCodes.Pop);
+                            }
                         }
                         else
                         {
-                            il.Emit(OpCodes.Call, typeof(BinaryUtil).GetTypeInfo().GetMethod("WriteInt32Unsafe"));
+                            MethodInfo? writeInt32UnsafeMethodInfo = typeof(BinaryUtil).GetTypeInfo().GetMethod("WriteInt32Unsafe");
+                            if(writeInt32UnsafeMethodInfo != null)
+                            {
+                                il.Emit(OpCodes.Call, writeInt32UnsafeMethodInfo);
+                            }
                         }
                         il.Emit(OpCodes.Ldarg_2);
                         il.Emit(OpCodes.Ldarg_0);
@@ -355,7 +394,12 @@ namespace ZeroFormatter.Formatters
                         il.Emit(OpCodes.Ldarg_2);
                         il.Emit(OpCodes.Ldarg_3);
                         item.Item2.EmitLoadValue(il);
-                        il.Emit(OpCodes.Callvirt, item.Item3.FieldType.GetTypeInfo().GetMethod("Serialize"));
+
+                        MethodInfo? serializeMethodInfo2 = item.Item3.FieldType.GetTypeInfo().GetMethod("Serialize");
+                        if(serializeMethodInfo2 != null)
+                        {
+                            il.Emit(OpCodes.Callvirt, serializeMethodInfo2);
+                        }
                         il.Emit(OpCodes.Add);
                         il.Emit(OpCodes.Starg_S, (byte)2);
                     }
@@ -364,7 +408,12 @@ namespace ZeroFormatter.Formatters
                     il.Emit(OpCodes.Ldloc_1);
                     il.Emit(OpCodes.Ldarg_2);
                     il.EmitLdc_I4(schemaLastIndex);
-                    il.Emit(OpCodes.Call, typeof(ObjectSegmentHelper).GetTypeInfo().GetMethod("WriteSize"));
+
+                    MethodInfo? writeInt32MethodInfo3 = typeof(BinaryUtil).GetTypeInfo().GetMethod("WriteInt32");
+                    if(writeInt32MethodInfo3 != null)
+                    {
+                        il.Emit(OpCodes.Call, writeInt32MethodInfo3);
+                    }
                     il.Emit(OpCodes.Ret);
                 }
             }
@@ -382,7 +431,12 @@ namespace ZeroFormatter.Formatters
                 il.Emit(OpCodes.Ldarg_S, (byte)4);
                 il.Emit(OpCodes.Ldarg_1);
                 il.Emit(OpCodes.Ldarg_2);
-                il.Emit(OpCodes.Call, typeof(BinaryUtil).GetTypeInfo().GetMethod("ReadInt32"));
+
+                MethodInfo? readInt32MethodInfo = typeof(BinaryUtil).GetTypeInfo().GetMethod("ReadInt32");
+                if(readInt32MethodInfo != null)
+                {
+                    il.Emit(OpCodes.Call, readInt32MethodInfo);
+                }
                 il.Emit(OpCodes.Stind_I4);
 
                 il.Emit(OpCodes.Ldarg_S, (byte)4);
@@ -408,12 +462,23 @@ namespace ZeroFormatter.Formatters
                     il.Emit(OpCodes.Ldarg_2);
                     il.Emit(OpCodes.Ldarg_S, (byte)4);
                     il.Emit(OpCodes.Ldind_I4);
-                    il.Emit(OpCodes.Call, typeof(ArraySegment<byte>).GetTypeInfo().GetConstructor(new[] { typeof(byte[]), typeof(int), typeof(int) }));
+
+                    ConstructorInfo? constructorInfo = typeof(ArraySegment<byte>).GetTypeInfo().GetConstructor(new[] { typeof(byte[]), typeof(int), typeof(int) });
+                    if(constructorInfo != null)
+                    {
+                        il.Emit(OpCodes.Newobj, constructorInfo);
+                    }
 
                     il.Emit(OpCodes.Ldarg_3);
                     il.Emit(OpCodes.Ldloc_0);
-                    var ti = typeof(DynamicObjectSegmentBuilder<,>).MakeGenericType(resolverType, elementType).GetTypeInfo().GetMethod("GetProxyType").Invoke(null, null) as TypeInfo;
-                    il.Emit(OpCodes.Newobj, ti.GetConstructor(new[] { typeof(DirtyTracker), typeof(ArraySegment<byte>) }));
+
+                    var ti = typeof(DynamicObjectSegmentBuilder<,>).MakeGenericType(resolverType, elementType).GetTypeInfo().GetMethod("GetProxyType")?.Invoke(null, null) as TypeInfo;
+                    ConstructorInfo? constructorInfo2 = ti?.GetConstructor(new[] { typeof(DirtyTracker), typeof(ArraySegment<byte>) });
+                    
+                    if(constructorInfo2 != null)
+                    {
+                        il.Emit(OpCodes.Newobj, constructorInfo2);
+                    }
                     il.Emit(OpCodes.Ret);
                 }
             }
@@ -425,7 +490,7 @@ namespace ZeroFormatter.Formatters
     internal static class DynamicStructFormatter
     {
         // create dynamic struct Formatter<T>
-        public static object Create<TTypeResolver, T>()
+        public static object? Create<TTypeResolver, T>()
             where TTypeResolver : ITypeResolver, new()
         {
             var resolverType = typeof(TTypeResolver);
@@ -436,7 +501,7 @@ namespace ZeroFormatter.Formatters
             if (ti.IsNullable())
             {
                 var elementType = ti.GetGenericArguments()[0];
-                var formatter = typeof(Formatter<,>).MakeGenericType(resolverType, elementType).GetTypeInfo().GetProperty("Default").GetGetMethod().Invoke(null, null);
+                var formatter = typeof(Formatter<,>).MakeGenericType(resolverType, elementType).GetTypeInfo().GetProperty("Default")?.GetGetMethod()?.Invoke(null, null);
                 return Activator.CreateInstance(typeof(NullableStructFormatter<,>).MakeGenericType(resolverType, elementType), new[] { formatter });
             }
             else
@@ -463,19 +528,36 @@ namespace ZeroFormatter.Formatters
             {
                 if (item.Item1 != expected) throw new InvalidOperationException("Struct index must be started with 0 and be sequential. Type: " + t.FullName + " InvalidIndex:" + item.Item1);
                 expected++;
-
-                var formatter = typeof(Formatter<,>).MakeGenericType(resolverType, item.Item2.MemberType).GetTypeInfo().GetProperty("Default");
-                var len = (formatter.GetGetMethod().Invoke(null, Type.EmptyTypes) as IFormatter).GetLength();
-                if (len != null)
-                {
-                    lengthSum += len.Value;
+                
+                PropertyInfo? formatter = null;
+                Type? memberType = item.Item2.MemberType;
+                if(memberType == null) {
+                    formatter = typeof(Formatter<,>).MakeGenericType(resolverType).GetTypeInfo().GetProperty("Default");
                 }
-                else
+                else {
+                    formatter = typeof(Formatter<,>).MakeGenericType(resolverType, memberType).GetTypeInfo().GetProperty("Default");
+                }
+                
+                var iFormatter = formatter?.GetGetMethod()?.Invoke(null, Type.EmptyTypes) as IFormatter;
+                if (iFormatter == null)
                 {
                     isNullable = true;
                 }
+                else{
+                    var len = iFormatter.GetLength();
+                    if (len != null)
+                    {
+                        lengthSum += len.Value;
+                    }
+                    else
+                    {
+                        isNullable = true;
+                    }
+                }
 
-                constructorTypes.Add(item.Item2.MemberType);
+                if(memberType != null) {
+                    constructorTypes.Add(memberType);
+                }
             }
 
             if (expected != 0)
@@ -493,7 +575,7 @@ namespace ZeroFormatter.Formatters
         static TypeInfo BuildFormatter(ModuleBuilder builder, Type resolverType, Type elementType, int? length, Tuple<int, EmittableMemberInfo>[] memberInfos)
         {
             var typeBuilder = builder.DefineType(
-                DynamicAssemblyHolder.ModuleName + "." + resolverType.FullName.Replace(".", "_") + "." + elementType.FullName + "$Formatter",
+                DynamicAssemblyHolder.ModuleName + "." + resolverType.FullName?.Replace(".", "_") + "." + elementType.FullName + "$Formatter",
                 TypeAttributes.Public,
                 typeof(Formatter<,>).MakeGenericType(resolverType, elementType));
 
@@ -510,14 +592,20 @@ namespace ZeroFormatter.Formatters
 
                 var il = method.GetILGenerator();
 
-                il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Call, typeof(Formatter<,>).MakeGenericType(resolverType, elementType).GetTypeInfo().GetConstructor(Type.EmptyTypes));
+                ConstructorInfo? constructorInfo = typeof(Formatter<,>).MakeGenericType(resolverType, elementType).GetTypeInfo().GetConstructor(Type.EmptyTypes);
+                if(constructorInfo != null) {
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Call, constructorInfo);
+                }
 
                 foreach (var item in formattersInField)
                 {
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Call, item.Item3.FieldType.GetTypeInfo().GetProperty("Default").GetGetMethod());
-                    il.Emit(OpCodes.Stfld, item.Item3);
+                    MethodInfo? methodInfo = item.Item3.FieldType.GetTypeInfo().GetProperty("Default")?.GetGetMethod();
+                    if(methodInfo != null) {
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Call, methodInfo);
+                        il.Emit(OpCodes.Stfld, item.Item3);
+                    }
                 }
                 il.Emit(OpCodes.Ret);
             }
@@ -542,9 +630,12 @@ namespace ZeroFormatter.Formatters
                         var field = formattersInField[i];
                         if (i != 0) il.Emit(OpCodes.Brfalse, label);
 
-                        il.Emit(OpCodes.Ldarg_0);
-                        il.Emit(OpCodes.Ldfld, field.Item3);
-                        il.Emit(OpCodes.Callvirt, field.Item3.FieldType.GetTypeInfo().GetProperty("NoUseDirtyTracker").GetGetMethod());
+                        MethodInfo? methodInfo = field.Item3.FieldType.GetTypeInfo().GetProperty("NoUseDirtyTracker")?.GetGetMethod();
+                        if(methodInfo != null) {
+                            il.Emit(OpCodes.Ldarg_0);
+                            il.Emit(OpCodes.Ldfld, field.Item3);
+                            il.Emit(OpCodes.Callvirt, methodInfo);
+                        }
                     }
 
                     il.Emit(OpCodes.Ret);
@@ -576,9 +667,12 @@ namespace ZeroFormatter.Formatters
                 }
                 else
                 {
-                    il.EmitLdc_I4(length.Value);
-                    il.Emit(OpCodes.Newobj, typeof(int?).GetTypeInfo().GetConstructor(new[] { typeof(int) }));
-                    il.Emit(OpCodes.Ret);
+                    ConstructorInfo? constructorInfo = typeof(int?).GetTypeInfo().GetConstructor(new[] { typeof(int) });
+                    if(constructorInfo != null) {
+                        il.EmitLdc_I4(length.Value);
+                        il.Emit(OpCodes.Newobj, constructorInfo);
+                        il.Emit(OpCodes.Ret);
+                    }
                 }
             }
             // public override int Serialize(ref byte[] bytes, int offset, T value)
@@ -593,10 +687,13 @@ namespace ZeroFormatter.Formatters
 
                 if (length != null)
                 {
-                    il.Emit(OpCodes.Ldarg_1);
-                    il.Emit(OpCodes.Ldarg_2);
-                    il.EmitLdc_I4(length.Value);
-                    il.Emit(OpCodes.Call, typeof(BinaryUtil).GetTypeInfo().GetMethod("EnsureCapacity"));
+                    MethodInfo? ensureCapacityMethodInfo = typeof(BinaryUtil).GetTypeInfo().GetMethod("EnsureCapacity");
+                    if(ensureCapacityMethodInfo != null) {
+                        il.Emit(OpCodes.Ldarg_1);
+                        il.Emit(OpCodes.Ldarg_2);
+                        il.EmitLdc_I4(length.Value);
+                        il.Emit(OpCodes.Call, ensureCapacityMethodInfo);
+                    }
                 }
 
                 il.Emit(OpCodes.Ldarg_2);
@@ -604,16 +701,19 @@ namespace ZeroFormatter.Formatters
 
                 foreach (var item in formattersInField)
                 {
-                    il.Emit(OpCodes.Ldarg_2);
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Ldfld, item.Item3);
-                    il.Emit(OpCodes.Ldarg_1);
-                    il.Emit(OpCodes.Ldarg_2);
-                    il.Emit(OpCodes.Ldarga_S, (byte)3);
-                    item.Item2.EmitLoadValue(il);
-                    il.Emit(OpCodes.Callvirt, item.Item3.FieldType.GetTypeInfo().GetMethod("Serialize"));
-                    il.Emit(OpCodes.Add);
-                    il.Emit(OpCodes.Starg_S, (byte)2);
+                    MethodInfo? methodInfo = item.Item3.FieldType.GetTypeInfo().GetMethod("Serialize");
+                    if(methodInfo != null) {
+                        il.Emit(OpCodes.Ldarg_2);
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Ldfld, item.Item3);
+                        il.Emit(OpCodes.Ldarg_1);
+                        il.Emit(OpCodes.Ldarg_2);
+                        il.Emit(OpCodes.Ldarga_S, (byte)3);
+                        item.Item2.EmitLoadValue(il);
+                        il.Emit(OpCodes.Callvirt, methodInfo);
+                        il.Emit(OpCodes.Add);
+                        il.Emit(OpCodes.Starg_S, (byte)2);
+                    }
                 }
 
                 // offset - startOffset;
@@ -635,7 +735,10 @@ namespace ZeroFormatter.Formatters
                     il.DeclareLocal(typeof(int)); // size
                     foreach (var item in formattersInField)
                     {
-                        il.DeclareLocal(item.Item2.MemberType); // item1, item2...
+                        Type? type = item.Item2.MemberType;
+                        if(type != null) {
+                             il.DeclareLocal(type); // item1, item2...
+                        }
                     }
                     il.DeclareLocal(elementType); // result
 
@@ -644,24 +747,28 @@ namespace ZeroFormatter.Formatters
                     il.Emit(OpCodes.Stind_I4);
                     foreach (var item in formattersInField)
                     {
-                        il.Emit(OpCodes.Ldarg_0);
-                        il.Emit(OpCodes.Ldfld, item.Item3);
-                        il.Emit(OpCodes.Ldarg_1);
-                        il.Emit(OpCodes.Ldarg_2);
-                        il.Emit(OpCodes.Ldarg_3);
-                        il.Emit(OpCodes.Ldloca_S, (byte)0);
-                        il.Emit(OpCodes.Callvirt, item.Item3.FieldType.GetTypeInfo().GetMethod("Deserialize"));
-                        il.Emit(OpCodes.Stloc, item.Item1 + 1);
-                        il.Emit(OpCodes.Ldarg_2);
-                        il.Emit(OpCodes.Ldloc_0);
-                        il.Emit(OpCodes.Add);
-                        il.Emit(OpCodes.Starg_S, (byte)2);
-                        il.Emit(OpCodes.Ldarg_S, (byte)4);
-                        il.Emit(OpCodes.Dup);
-                        il.Emit(OpCodes.Ldind_I4);
-                        il.Emit(OpCodes.Ldloc_0);
-                        il.Emit(OpCodes.Add);
-                        il.Emit(OpCodes.Stind_I4);
+                        MethodInfo? methodInfo = item.Item3.FieldType.GetTypeInfo().GetMethod("Deserialize");
+                        if(methodInfo != null) {
+                            il.Emit(OpCodes.Ldarg_0);
+                            il.Emit(OpCodes.Ldfld, item.Item3);
+                            il.Emit(OpCodes.Ldarg_1);
+                            il.Emit(OpCodes.Ldarg_2);
+                            il.Emit(OpCodes.Ldarg_3);
+                            il.Emit(OpCodes.Ldloca_S, (byte)0);
+                            il.Emit(OpCodes.Callvirt, methodInfo);
+                            il.Emit(OpCodes.Stloc, item.Item1 + 1);
+                            il.Emit(OpCodes.Ldarg_2);
+                            il.Emit(OpCodes.Ldloc_0);
+                            il.Emit(OpCodes.Add);
+                            il.Emit(OpCodes.Starg_S, (byte)2);
+                            il.Emit(OpCodes.Ldarg_S, (byte)4);
+                            il.Emit(OpCodes.Dup);
+                            il.Emit(OpCodes.Ldind_I4);
+                            il.Emit(OpCodes.Ldloc_0);
+                            il.Emit(OpCodes.Add);
+                            il.Emit(OpCodes.Stind_I4);
+                        }
+                        
                     }
 
                     for (int i = 0; i < memberInfos.Length; i++)

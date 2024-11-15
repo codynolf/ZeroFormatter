@@ -32,7 +32,7 @@ namespace ZeroFormatter.Segments
         ArraySegment<byte> originalBytes;
         readonly IEqualityComparer<TKey> comparer;
 
-        internal DictionarySegment(DirtyTracker tracker, int size)
+        public DictionarySegment(DirtyTracker tracker, int size)
         {
             tracker = tracker.CreateChild();
             this.tracker = tracker;
@@ -55,7 +55,7 @@ namespace ZeroFormatter.Segments
             this.freeCount = 0;
         }
 
-        internal static DictionarySegment<TTypeResolver, TKey, TValue> Create(DirtyTracker tracker, byte[] bytes, int offset, out int byteSize)
+        public static DictionarySegment<TTypeResolver, TKey, TValue> Create(DirtyTracker tracker, byte[] bytes, int offset, out int byteSize)
         {
             var byteSizeOrCount = BinaryUtil.ReadInt32(ref bytes, offset);
             if (byteSizeOrCount == -1)

@@ -23,7 +23,7 @@ namespace ZeroFormatter.Formatters
 #>
 
 
-    [Preserve(AllMembers = true)]
+    
     internal class TupleFormatter<TTypeResolver, <#= ts #>> : Formatter<TTypeResolver, <#= t #>>
         where TTypeResolver : ITypeResolver, new()
     {
@@ -31,7 +31,7 @@ namespace ZeroFormatter.Formatters
         readonly Formatter<TTypeResolver, <#= toT(j) #>> formatter<#= j #>;
 <# } #>        
 
-        [Preserve]
+        
         public TupleFormatter()
         {
 <# for(var j = 1; j <= i; j++) { #>

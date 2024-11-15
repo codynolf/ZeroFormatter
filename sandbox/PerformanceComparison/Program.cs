@@ -145,7 +145,7 @@ class Program
         SerializeJsonNet(p); SerializeJsonNet(l);
         SerializeJil(p); SerializeJil(l);
         SerializeFsPickler(p); SerializeFsPickler(l);
-        SerializeBinaryFormatter(p); SerializeBinaryFormatter(l);
+        //SerializeBinaryFormatter(p); SerializeBinaryFormatter(l);
         SerializeDataContract(p); SerializeDataContract(l);
         SerializeSingleFlatBuffers(); SerializeArrayFlatBuffers();
         SerializeSingleProto3(p); SerializeArrayProto3(l);
@@ -168,7 +168,7 @@ class Program
         var d = SerializeJsonNet(p); Console.WriteLine();
         var e = SerializeJil(p); Console.WriteLine();
         var f = SerializeFsPickler(p); Console.WriteLine();
-        var g = SerializeBinaryFormatter(p); Console.WriteLine();
+        //var g = SerializeBinaryFormatter(p); Console.WriteLine();
         var h = SerializeDataContract(p); Console.WriteLine();
         var i = SerializeSingleFlatBuffers(); Console.WriteLine();
         var j = SerializeSingleProto3(p); Console.WriteLine();
@@ -185,7 +185,7 @@ class Program
         var D = SerializeJsonNet(l); Console.WriteLine();
         var E = SerializeJil(l); Console.WriteLine();
         var F = SerializeFsPickler(l); Console.WriteLine();
-        var G = SerializeBinaryFormatter(l); Console.WriteLine();
+        //var G = SerializeBinaryFormatter(l); Console.WriteLine();
         var H = SerializeDataContract(l); Console.WriteLine();
         var I = SerializeArrayFlatBuffers(); Console.WriteLine();
         var J = SerializeArrayProto3(l); Console.WriteLine();
@@ -200,7 +200,7 @@ class Program
         Validate("JSON.NET", p, l, d, D);
         Validate("Jil", p, l, e, E);
         Validate("FsPickler", p, l, f, F);
-        Validate("BinaryFormatter", p, l, g, G);
+        //Validate("BinaryFormatter", p, l, g, G);
         Validate("DataContract", p, l, h, H);
         ValidateFlatBuffers(p, l, i, I);
         ValidateProto3(p, l, j, J);
@@ -348,7 +348,7 @@ class Program
         {
             for (int i = 0; i < Iteration; i++)
             {
-                bytes = MessagePack.LZ4MessagePackSerializer.Serialize(original);
+                bytes = MessagePack.MessagePackSerializer.Serialize(original, MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray));
             }
         }
 
@@ -356,7 +356,7 @@ class Program
         {
             for (int i = 0; i < Iteration; i++)
             {
-                copy = MessagePack.LZ4MessagePackSerializer.Deserialize<T>(bytes);
+                copy = MessagePack.MessagePackSerializer.Deserialize<T>(bytes, MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray));
             }
         }
 
@@ -568,39 +568,6 @@ class Program
                 {
                     copy = Jil.JSON.Deserialize<T>(tr);
                 }
-            }
-        }
-
-        if (!dryRun)
-        {
-            Console.WriteLine(string.Format("{0,15}   {1}", "Binary Size", ToHumanReadableSize(stream.Position)));
-        }
-
-        return copy;
-    }
-
-    static T SerializeBinaryFormatter<T>(T original)
-    {
-        Console.WriteLine("BinaryFormatter");
-
-        var serializer = new BinaryFormatter();
-        T copy = default(T);
-        MemoryStream stream = null;
-
-        using (new Measure("Serialize"))
-        {
-            for (int i = 0; i < Iteration; i++)
-            {
-                serializer.Serialize(stream = new MemoryStream(), original);
-            }
-        }
-
-        using (new Measure("Deserialize"))
-        {
-            for (int i = 0; i < Iteration; i++)
-            {
-                stream.Position = 0;
-                copy = (T)serializer.Deserialize(stream);
             }
         }
 

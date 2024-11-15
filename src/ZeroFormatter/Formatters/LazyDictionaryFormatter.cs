@@ -5,11 +5,11 @@ using ZeroFormatter.Segments;
 
 namespace ZeroFormatter.Formatters
 {
-    [Preserve(AllMembers = true)]
+    
     internal class LazyDictionaryFormatter<TTypeResolver, TKey, TValue> : Formatter<TTypeResolver, ILazyDictionary<TKey, TValue>>
         where TTypeResolver : ITypeResolver, new()
     {
-        [Preserve]
+        
         public LazyDictionaryFormatter()
         {
 
@@ -49,11 +49,11 @@ namespace ZeroFormatter.Formatters
 
 #if !UNITY
 
-    [Preserve(AllMembers = true)]
+    
     internal class LazyReadOnlyDictionaryFormatter<TTypeResolver, TKey, TValue> : Formatter<TTypeResolver, ILazyReadOnlyDictionary<TKey, TValue>>
         where TTypeResolver : ITypeResolver, new()
     {
-        [Preserve]
+        
         public LazyReadOnlyDictionaryFormatter()
         {
 
@@ -93,11 +93,11 @@ namespace ZeroFormatter.Formatters
 
 #endif
 
-    [Preserve(AllMembers = true)]
+    
     internal class DictionaryEntryFormatter<TTypeResolver, TKey, TValue> : Formatter<TTypeResolver, DictionaryEntry<TTypeResolver, TKey, TValue>>
         where TTypeResolver : ITypeResolver, new()
     {
-        [Preserve]
+        
         public DictionaryEntryFormatter()
         {
 
