@@ -1,13 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.IO;
-using ZeroFormatter.Formatters;
+﻿using ZeroFormatter.Formatters;
 using ZeroFormatter.Internal;
 using ZeroFormatter.Segments;
-#if !UNITY
 using System.Reflection;
 using System.Linq.Expressions;
-#endif
 
 namespace ZeroFormatter
 {
@@ -104,8 +99,6 @@ namespace ZeroFormatter
 
             return new ArraySegment<byte>(buffer, 0, length);
         }
-
-#if !UNITY
 
         public static class NonGeneric
         {
@@ -259,9 +252,7 @@ namespace ZeroFormatter
                 }
             }
         }
-
-#endif
-
+        
         public static class CustomSerializer<TTypeResolver>
             where TTypeResolver : ITypeResolver, new()
         {

@@ -44,11 +44,7 @@ namespace ZeroFormatter.Comparers
 
         static ZeroFormatterEqualityComparer()
         {
-            var comparer = ZeroFormatterEqualityComparerHelper.GetBuiltinComparer
-#if !UNITY
-                <T>
-#endif
-                (typeof(T));
+            var comparer = ZeroFormatterEqualityComparerHelper.GetBuiltinComparer<T>(typeof(T));
 
             if (comparer == null)
             {

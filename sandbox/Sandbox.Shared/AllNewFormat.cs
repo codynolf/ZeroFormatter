@@ -79,7 +79,6 @@ namespace Sandbox.Shared
         [Index(6)]
         public virtual IEnumerable<int> InterfaceEnumerableFormat { get; set; }
 
-#if !UNITY
 
         [Index(7)]
         public virtual ISet<int> InterfaceSetFormat { get; set; }
@@ -89,9 +88,6 @@ namespace Sandbox.Shared
         public virtual ReadOnlyDictionary<int, int> ReadOnlyDictionaryFormat { get; set; }
         [Index(10)]
         public virtual IReadOnlyDictionary<int, int> InterfaceReadOnlyDictionaryFormat { get; set; }
-
-#endif
-
 
         [Index(11)]
         public virtual ILookup<bool, int> LookupFormat { get; set; }

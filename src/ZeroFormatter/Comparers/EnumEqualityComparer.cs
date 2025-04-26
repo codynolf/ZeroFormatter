@@ -1,8 +1,4 @@
-﻿#if !UNITY
-
-using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace ZeroFormatter.Comparers
 {
@@ -151,5 +147,3 @@ namespace ZeroFormatter.Comparers
         }
     }
 }
-
-#endif

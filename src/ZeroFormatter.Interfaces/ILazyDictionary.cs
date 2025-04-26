@@ -12,14 +12,9 @@ namespace ZeroFormatter
     public interface ILazyLookup<TKey, TElement> : ILookup<TKey, TElement>
     {
     }
-
-#if! UNITY
-
     public interface ILazyReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
     {
     }
-
-#endif
 
 
     public static class LazyCollectionExtensions
